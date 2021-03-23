@@ -17,7 +17,8 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-        return view('pages.admin.user', compact('users'));
+        $trash = User::onlyTrashed()->get();
+        return view('pages.admin.user', compact('users','trash'));
     }
 
     /**
@@ -110,4 +111,19 @@ class UserController extends Controller
         $item->delete();
         return redirect()->back()->with('status','User berhasil dihapus');
     }
+
+    public function restore($id)
+    {
+        $user = User::onlyTrashed()->where('id', $id);
+        $user->restore();
+        return redirect()->back()->with('status','Profile User berhasil Direstore');
+    }
+
+     public function forceDelete($id)
+    {
+        $user = User::onlyTrashed()->where('id', $id);
+        $user->forceDelete();
+        return redirect()->back()->with('status','Profile User berhasil didelete permanent!');
+    }
+
 }

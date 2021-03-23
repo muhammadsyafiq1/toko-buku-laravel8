@@ -21,4 +21,6 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::resource('book', App\Http\Controllers\BookController::class);
+Route::get('user/restore/{id}', [App\Http\Controllers\UserController::class, 'restore'])->name('user.restore');
+Route::get('user/forcedelete/{id}', [App\Http\Controllers\UserController::class, 'forceDelete'])->name('user.forceDelete');
 Route::resource('user', App\Http\Controllers\UserController::class);

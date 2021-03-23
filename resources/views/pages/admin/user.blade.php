@@ -27,122 +27,156 @@
                 <div class="card mb-0">
                   <div class="card-body">
                     <ul class="nav nav-pills" id="nav">
+                      <!-- trigger all -->
                       <li class="nav-item">
-                        <a class="nav-link active" href="#">All <span class="badge badge-white">5</span></a>
+                        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">All <span class="badge badge-primary">{{$users->count()}}</span></a>
                       </li>
+                      <!-- trigger trash -->
                       <li class="nav-item">
-                        <a class="nav-link" href="#">Draft <span class="badge badge-primary">1</span></a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Pending <span class="badge badge-primary">1</span></a>
-                      </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="#">Trash <span class="badge badge-primary">0</span></a>
+                        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Trash <span class="badge badge-primary">{{$trash->count()}}</span></a>
                       </li>
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="row mt-4">
-              <div class="col-12">
-                <div class="card">
-                  <div class="card-body">
-                  @if(session('status'))
-                      <div class="alert alert-info">
-                        <b>Note!</b> {{session('status')}}
-                      </div>
-                    @endif
-                    <div>
-                      <form>
-                        <div class="input-group">
-                          <input type="text" class="form-control" placeholder="Search">
-                          <div class="input-group-append">
-                            <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+            <div class="tab-content" id="myTabContent">
+              <!-- all users -->
+              <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div class="row mt-4">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-body">
+                      @if(session('status'))
+                          <div class="alert alert-info">
+                            <b>Note!</b> {{session('status')}}
                           </div>
-                        </div>
-                      </form>
-                    </div>
-
-                    <div class="clearfix mb-3"></div>
-
-                    <div class="table-responsive">
-                      <table class="table table-striped">
-                        <tr>
-                          <th>Username</th>
-                          <th>Email</th>
-                          <th>Roles</th>
-                          <th>Created At</th>
-                          <th>Status</th>
-                        </tr>
-                        @foreach($users as $user)
-                          <tr>
-                          <td>{{$user->username}}
-                              <div class="table-links">
-                                <form action="{{route('user.destroy',$user->id)}}" class="d-inline" method="post">
-                                  @csrf @method('delete')
-                                  <a href="{{route('user.show',$user->id)}}"><i class="fa fa-eye text-white btn btn-sm btn-warning"></i></a>
-                                  <div class="bullet"></div>
-                                  <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Are You Sure?')">
-                                    <i class="fa fa-trash"></i>
-                                  </button>
-                                </form>
+                        @endif
+                        <div>
+                          <form>
+                            <div class="input-group">
+                              <input type="text" class="form-control" placeholder="Search">
+                              <div class="input-group-append">
+                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
                               </div>
-                            </td>
-                            <td>
-                              {{$user->email}}
-                            </td>
-                            <td>
-                              @php 
-                                $roles = json_decode($user->roles); 
-                              @endphp
+                            </div>
+                          </form>
+                        </div>
 
-                                @foreach($roles as $role)
-                                  &middot; {{$role}}
-                                @endforeach
-                            </td>
-                            <td>{{\Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}}</td>
-                            <td>
-                              @if($user->status == "active")
-                              <div class="badge badge-primary">{{$user->status}}</div>
-                              @else
-                              <div class="badge badge-secondary">{{$user->status}}</div>
-                              @endif
-                            </td>
-                        </tr>
-                        @endforeach
-                      </table>
-                    </div>
-                    <div class="float-right">
-                      <nav>
-                        <ul class="pagination">
-                          <li class="page-item disabled">
-                            <a class="page-link" href="#" aria-label="Previous">
-                              <span aria-hidden="true">&laquo;</span>
-                              <span class="sr-only">Previous</span>
-                            </a>
-                          </li>
-                          <li class="page-item active">
-                            <a class="page-link" href="#">1</a>
-                          </li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">2</a>
-                          </li>
-                          <li class="page-item">
-                            <a class="page-link" href="#">3</a>
-                          </li>
-                          <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                              <span aria-hidden="true">&raquo;</span>
-                              <span class="sr-only">Next</span>
-                            </a>
-                          </li>
-                        </ul>
-                      </nav>
+                        <div class="clearfix mb-3"></div>
+
+                        <div class="table-responsive">
+                          <table class="table table-striped">
+                            <tr>
+                              <th>Username</th>
+                              <th>Email</th>
+                              <th>Roles</th>
+                              <th>Created At</th>
+                              <th>Status</th>
+                            </tr>
+                            @foreach($users as $user)
+                              <tr>
+                              <td>{{$user->username}}
+                                  <div class="table-links">
+                                    <form action="{{route('user.destroy',$user->id)}}" class="d-inline" method="post">
+                                      @csrf @method('delete')
+                                      <a href="{{route('user.show',$user->id)}}"><i class="fa fa-eye text-white btn btn-sm btn-warning"></i></a>
+                                      <div class="bullet"></div>
+                                      <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('Are You Sure?')">
+                                        <i class="fa fa-trash"></i>
+                                      </button>
+                                    </form>
+                                  </div>
+                                </td>
+                                <td>
+                                  {{$user->email}}
+                                </td>
+                                <td>
+                                  @php 
+                                    $roles = json_decode($user->roles); 
+                                  @endphp
+
+                                    @foreach($roles as $role)
+                                      &middot; {{$role}}
+                                    @endforeach
+                                </td>
+                                <td>{{\Carbon\Carbon::parse($user->created_at)->format('d/m/Y')}}</td>
+                                <td>
+                                  @if($user->status == "active")
+                                  <div class="badge badge-primary">{{$user->status}}</div>
+                                  @else
+                                  <div class="badge badge-secondary">{{$user->status}}</div>
+                                  @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                          </table>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+
+              <!-- trash -->
+               <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                 <div class="row mt-4">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-body">
+                        <div>
+                          <form>
+                            <div class="input-group">
+                              <input type="text" class="form-control" placeholder="Search">
+                              <div class="input-group-append">
+                                <button class="btn btn-primary"><i class="fas fa-search"></i></button>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+
+                        <div class="clearfix mb-3"></div>
+
+                        <div class="table-responsive">
+                          <table class="table table-striped">
+                            <tr>
+                              <th>Username</th>
+                              <th>Email</th>
+                              <th>Roles</th>
+                              <th>Deleted At</th>
+                              <th>Actions</th>
+                            </tr>
+                            @foreach($trash as $trash)
+                              <tr>
+                              <td>{{$trash->username}}
+                                </td>
+                                <td>
+                                  {{$trash->email}}
+                                </td>
+                                <td>
+                                  @php 
+                                    $roles = json_decode($trash->roles); 
+                                  @endphp
+
+                                    @foreach($roles as $role)
+                                      &middot; {{$role}}
+                                    @endforeach
+                                </td>
+                                <td>{{\Carbon\Carbon::parse($trash->deleted_at)->format('d/m/Y')}}</td>
+                                <td>
+                                  <a href="{{route('user.forceDelete',$trash->id)}}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> Delete</a>
+                                  <a href="{{route('user.restore',$trash->id)}}" class="btn btn-sm btn-warning"><i class="fa  fa-refresh"></i> Restore</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+               </div>
+
             </div>
           </div>
         </section>
